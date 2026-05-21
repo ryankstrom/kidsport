@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>U18 Boys Nationals — Calgary 2026 — Family Schedule</title>
+<style>
+  :root {
+    --bg: #fffff3;            /* Dinos cream */
+    --card: #ffffff;
+    --ink: #2a2a2a;           /* Dinos near-black */
+    --muted: #6b6b6b;
+    --line: #e5e0d0;
+    --brand: #810707;         /* Dinos red */
+    --brand-dark: #5a0505;
+    --brand-soft: #e05c5c;    /* light red accent */
+    --accent: #810707;
+    --win: #2f7a3a;
+    --loss: #b91c1c;
+    --highlight: #fdf3df;     /* warm cream highlight */
+    --highlight-border: #810707;
+    --stale: #fef2f2;
+    --stale-border: #fca5a5;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.06);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  header {
+    background: var(--card);
+    color: var(--ink);
+    padding: 18px 20px 20px;
+    border-top: 5px solid var(--brand);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+
+  header .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  header .brand-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  header .logo {
+    height: 72px;
+    width: auto;
+    display: block;
+  }
+
+  header .titles h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  header .titles .subtitle {
+    margin: 2px 0 6px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  header .meta {
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.5;
+  }
+  header .meta .meta-strong {
+    color: var(--brand);
+    font-weight: 700;
+  }
+  header .live-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--brand);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  header .live-tag .pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    animation: livepulse 2s infinite;
+  }
+  @keyframes livepulse {
+    0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
+    70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .picker {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .picker label { font-weight: 600; font-size: 0.95rem; }
+  .picker select {
+    flex: 1;
+    min-width: 240px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--line);
+    background: white;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .picker select:focus { outline: none; border-color: var(--brand); }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 4px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+  .status-bar .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--win);
+    display: inline-block;
+    margin-right: 6px;
+  }
+  .status-bar.stale .dot { background: var(--loss); }
+  .status-bar.loading .dot { background: var(--accent); animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+  .status-bar button {
+    margin-left: auto;
+    background: white;
+    border: 1.5px solid var(--line);
+    color: var(--ink);
+    padding: 6px 14px;
+    border-radius: 7px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .status-bar button:hover { background: #f9fafb; }
+  .status-bar button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .stale-banner {
+    background: var(--stale);
+    border: 1.5px solid var(--stale-border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: #991b1b;
+    display: none;
+  }
+  .stale-banner.show { display: block; }
+
+  .next-up {
+    background: linear-gradient(135deg, #fef5f0 0%, #fde0d6 100%);
+    border-left: 5px solid var(--brand);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: none;
+  }
+  .next-up.show { display: block; }
+  .next-up .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--brand);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .next-up .when { font-size: 1.3rem; font-weight: 800; margin-bottom: 4px; color: var(--ink); }
+  .next-up .who { font-size: 1.05rem; color: var(--brand-dark); font-weight: 600; }
+  .next-up .where {
+    font-size: 1rem;
+    color: var(--ink);
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .next-up .where .court-emph { color: var(--brand-dark); font-weight: 800; }
+
+  .day-section { margin-bottom: 28px; }
+  .day-section h2 {
+    font-size: 1.1rem;
+    margin: 0 0 12px;
+    padding: 0 4px;
+  }
+  .day-section .day-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    padding: 0 4px;
+    margin: -8px 0 12px;
+  }
+
+  /* Pool card */
+  .pool {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .pool h3 {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    color: var(--brand);
+  }
+  .pool .pool-meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  /* Standings table */
+  .standings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+  }
+  .standings th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 6px 8px;
+    border-bottom: 1.5px solid var(--line);
+  }
+  .standings th:not(:first-child) { text-align: center; }
+  .standings td {
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .standings td:not(:first-child) {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .standings tr:last-child td { border-bottom: none; }
+  .standings tr.mine td { background: var(--highlight); }
+  .standings tr.mine td:first-child { font-weight: 700; }
+  .rank-badge {
+    display: inline-block;
+    background: var(--muted);
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 18px;
+    margin-right: 8px;
+  }
+  .rank-badge.top { background: var(--win); }
+
+  /* Match cards */
+  .matches-header {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .match {
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 80px auto 1fr auto;
+    gap: 14px;
+    align-items: center;
+  }
+  .match.mine {
+    border-color: var(--highlight-border);
+    background: var(--highlight);
+  }
+  .match.played { background: #f9fafb; }
+  .match.mine.played { background: var(--highlight); }
+  .match.mine.upcoming {
+    border-color: #1d4ed8;
+    background: #eff6ff;
+  }
+  .match.mine.won {
+    border-color: var(--win);
+    background: #e8f5ea;
+  }
+  .match.mine.lost {
+    border-color: var(--loss);
+    background: #fef2f2;
+  }
+
+  .match .when {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .court-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--brand);
+    border-radius: 8px;
+    padding: 4px 10px 5px;
+    background: white;
+    min-width: 64px;
+    line-height: 1;
+  }
+  .court-badge .court-label {
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brand);
+  }
+  .court-badge .court-num {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: var(--brand-dark);
+    margin: 3px 0 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .court-badge .court-hall {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .match.mine .court-badge { background: white; }
+  .match .pair { font-size: 0.93rem; }
+  .match .pair .team { display: block; padding: 1px 0; }
+  .match .pair .team.win { font-weight: 700; }
+  .match .pair .team.loss { color: var(--muted); }
+  .match .pair .team .seed {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-left: 4px;
+    font-weight: 500;
+  }
+  .match .score {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.9rem;
+  }
+  .match .score .sets {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--brand);
+  }
+  .match .score .set-detail {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .match .score .pending { color: var(--muted); font-weight: 500; font-size: 0.85rem; }
+
+  /* Day 2 / Day 3 conditional cards */
+  .conditional {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+  .conditional .intro {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .destination {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .destination .finish {
+    background: var(--brand);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    min-width: 60px;
+    text-align: center;
+  }
+  .destination .arrow { color: var(--muted); }
+  .destination .target { font-size: 0.9rem; }
+  .destination .target .target-pool { font-weight: 600; }
+  .destination .target .target-meta {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+  .empty-state h3 { margin: 0 0 8px; color: var(--ink); }
+  .empty-state p { margin: 0; font-size: 0.9rem; }
+
+  .source-footer {
+    margin-top: 32px;
+    padding: 16px 4px;
+    border-top: 1px solid var(--line);
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .source-footer a { color: var(--brand); text-decoration: none; }
+  .source-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.2rem; }
+    header .logo { height: 56px; }
+    .match {
+      grid-template-columns: 64px auto 1fr;
+      gap: 10px;
+    }
+    .court-badge { min-width: 54px; padding: 3px 6px 4px; }
+    .court-badge .court-num { font-size: 1.3rem; }
+    .match .score {
+      grid-column: 1 / -1;
+      text-align: left;
+      padding-top: 6px;
+      border-top: 1px dashed var(--line);
+    }
+    .match .score .sets { display: inline; margin-right: 10px; }
+    .match .score .set-detail { display: inline; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand-left">
+      <img src="dinos-logo.png" alt="Dinos Volleyball" class="logo" />
+      <div class="titles">
+        <h1>Canadian Youth Nationals 2026</h1>
+        <p class="subtitle">U18 Boys · Calgary · Family Schedule</p>
+        <span class="live-tag"><span class="pulse"></span>Live from Volleyball Canada</span>
+      </div>
+    </div>
+    <div class="meta">
+      <div class="meta-strong">Thu May 21 – Sat May 23, 2026</div>
+      <div>BMO Centre, Stampede Park</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="picker">
+    <label for="teamSelect">My kid's team:</label>
+    <select id="teamSelect">
+      <option value="">Loading teams…</option>
+    </select>
+  </div>
+
+  <div class="status-bar" id="statusBar">
+    <span><span class="dot"></span><span id="statusText">Connecting…</span></span>
+    <button id="refreshBtn">↻ Refresh</button>
+  </div>
+
+  <div class="stale-banner" id="staleBanner">
+    Couldn't reach Volleyball Canada — showing the last data this device cached. Tap Refresh to retry.
+  </div>
+
+  <div class="next-up" id="nextUp">
+    <div class="label">Next match</div>
+    <div class="when" id="nextWhen"></div>
+    <div class="who" id="nextWho"></div>
+    <div class="where" id="nextWhere"></div>
+  </div>
+
+  <div id="content"></div>
+
+  <div class="source-footer">
+    Scores and schedule pulled live from
+    <a href="https://results.advancedeventsystems.com/event/MjAyNl9Wb2xsZXliYWxsX0NhbmFkYV9OYXRpb25hbHNfX18xN1VCX18xOFVHX19fMThVQg2/home" target="_blank" rel="noopener">Volleyball Canada's official results portal</a>.
+    Auto-refreshes every 60 seconds while open.
+  </div>
+</main>
+
+<script>
+  // ---------- Constants ----------
+  const EVENT_KEY = "MjAyNl9Wb2xsZXliYWxsX0NhbmFkYV9OYXRpb25hbHNfX18xN1VCX18xOFVHX19fMThVQg2";
+  const DIVISION_ID = -50008; // 18UB
+  const API = "https://results.advancedeventsystems.com";
+  const REFRESH_MS = 60_000;
+  const CACHE_KEY = "vbc2026.cache.v1";
+  const TEAM_KEY = "vbc2026.teamId.v1";
+  const DEFAULT_TEAM_ID = -54874; // Dinos U18 Red (AB2)
+
+  // ---------- State ----------
+  let state = {
+    pools: [],            // Day 1 pools (with teams)
+    teamId: null,         // selected team ID (negative integer from AES)
+    teamPool: null,       // pool object the team is in (Day 1)
+    poolSheet: null,      // poolsheet for teamPool (Day 1)
+    powerPoolSheet: null, // poolsheet for the team's Day 2 power pool (if assigned)
+    playoffSheet: null,   // poolsheet for the team's Day 3 playoff bracket (if assigned)
+    lastFetch: null,      // ISO timestamp
+    isStale: false,       // last fetch failed
+    loading: false,
+  };
+
+  // ---------- Persistence ----------
+  function saveCache() {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        pools: state.pools,
+        poolSheet: state.poolSheet,
+        powerPoolSheet: state.powerPoolSheet,
+        playoffSheet: state.playoffSheet,
+        lastFetch: state.lastFetch,
+      }));
+    } catch (e) { /* quota or private mode */ }
+  }
+
+  function loadCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return;
+      const c = JSON.parse(raw);
+      state.pools = c.pools || [];
+      state.poolSheet = c.poolSheet || null;
+      state.powerPoolSheet = c.powerPoolSheet || null;
+      state.playoffSheet = c.playoffSheet || null;
+      state.lastFetch = c.lastFetch || null;
+    } catch (e) {}
+  }
+
+  // ---------- AES fetchers ----------
+  async function fetchPools() {
+    const url = `${API}/api/event/${EVENT_KEY}/division/${DIVISION_ID}/pools/2026-05-21`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("pools " + res.status);
+    return res.json();
+  }
+
+  async function fetchPoolSheet(playId) {
+    const url = `${API}/api/event/${EVENT_KEY}/poolsheet/${playId}`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("poolsheet " + res.status);
+    return res.json();
+  }
+
+  // ---------- Lookups ----------
+  function findTeamPool(pools, teamId) {
+    for (const pool of pools) {
+      for (const t of pool.Teams || []) {
+        if (t && t.TeamId === teamId) return pool;
+      }
+    }
+    return null;
+  }
+
+  function findNextRoundPlayId(sheet, finishRank) {
+    // FutureRoundMatches are indexed by previous-round finish (1st/2nd/3rd/4th).
+    // Works for Day 1 → Day 2, Day 2 → Day 3, and any other branching round.
+    if (!sheet || !sheet.FutureRoundMatches) return null;
+    const target = sheet.FutureRoundMatches.find(f =>
+      f.RankText && f.RankText.startsWith(String(finishRank) + " "));
+    return target?.Play?.PlayId || null;
+  }
+
+  function teamFinishRank(sheet, teamId) {
+    // Returns 1..N when the team's standing in this round is settled, else null.
+    if (!sheet?.Pool?.Teams) return null;
+    const teams = sheet.Pool.Teams.filter(Boolean);
+
+    // Prefer AES's authoritative FinishRank once it's been published
+    const me = teams.find(t => t.TeamId === teamId);
+    if (me && me.FinishRank != null) return me.FinishRank;
+
+    // Fallback: compute when every team has played all round-robin matches
+    const totalMatches = teams.length - 1;
+    const allDone = teams.every(t => (t.MatchesWon + t.MatchesLost) === totalMatches);
+    if (!allDone) return null;
+    const sorted = [...teams].sort((a, b) =>
+      b.MatchesWon - a.MatchesWon ||
+      (b.SetsWon - b.SetsLost) - (a.SetsWon - a.SetsLost) ||
+      b.SetsWon - a.SetsWon
+    );
+    const idx = sorted.findIndex(t => t.TeamId === teamId);
+    return idx >= 0 ? idx + 1 : null;
+  }
+
+  // ---------- Refresh cycle ----------
+  async function refresh() {
+    if (state.loading) return;
+    state.loading = true;
+    renderStatus();
+    try {
+      // Pools list is static; fetch once
+      if (state.pools.length === 0) {
+        state.pools = await fetchPools();
+      }
+      if (state.teamId) {
+        state.teamPool = findTeamPool(state.pools, state.teamId);
+        if (state.teamPool) {
+          state.poolSheet = await fetchPoolSheet(state.teamPool.PlayId);
+
+          // Day 1 → Day 2: when pool play is settled, fetch the team's power pool
+          const day1Rank = teamFinishRank(state.poolSheet, state.teamId);
+          if (day1Rank) {
+            const ppPlayId = findNextRoundPlayId(state.poolSheet, day1Rank);
+            if (ppPlayId) {
+              try {
+                state.powerPoolSheet = await fetchPoolSheet(ppPlayId);
+
+                // Day 2 → Day 3: when power pool is settled, fetch the team's playoff sheet
+                const day2Rank = teamFinishRank(state.powerPoolSheet, state.teamId);
+                if (day2Rank) {
+                  const poPlayId = findNextRoundPlayId(state.powerPoolSheet, day2Rank);
+                  if (poPlayId) {
+                    try { state.playoffSheet = await fetchPoolSheet(poPlayId); }
+                    catch (e) { /* playoff bracket not posted yet */ }
+                  }
+                } else {
+                  state.playoffSheet = null;
+                }
+              } catch (e) { /* power pool may not be ready */ }
+            }
+          } else {
+            state.powerPoolSheet = null;
+            state.playoffSheet = null;
+          }
+        }
+      }
+      state.lastFetch = new Date().toISOString();
+      state.isStale = false;
+      saveCache();
+    } catch (e) {
+      console.warn("Refresh failed:", e);
+      state.isStale = true;
+    } finally {
+      state.loading = false;
+      render();
+    }
+  }
+
+  // ---------- Format helpers ----------
+  function formatTime(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  }
+
+  function formatDay(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    return d.toLocaleDateString([], { weekday: "short" });
+  }
+
+  function formatDayLong(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    return d.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" });
+  }
+
+  function shortCourt(name) {
+    // "Court 13 - Hall D/E/F" → "Court 13 (D/E/F)"
+    if (!name) return "";
+    const m = name.match(/Court\s+(\d+)\s*-\s*Hall\s+(.+)/);
+    return m ? `Court ${m[1]} (${m[2].trim()})` : name;
+  }
+
+  function parseCourt(name) {
+    if (!name) return { num: "?", hall: "" };
+    const m = name.match(/Court\s+(\S+)\s*-?\s*(?:Hall\s+)?(.*)/i);
+    if (m) return { num: m[1], hall: (m[2] || "").trim() };
+    return { num: name, hall: "" };
+  }
+
+  function relativeTime(iso) {
+    if (!iso) return "never";
+    const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (diff < 30) return "just now";
+    if (diff < 90) return "1 min ago";
+    if (diff < 3600) return `${Math.round(diff / 60)} min ago`;
+    if (diff < 86400) return `${Math.round(diff / 3600)} hr ago`;
+    return new Date(iso).toLocaleString();
+  }
+
+  // ---------- Render: team picker ----------
+  function renderPicker() {
+    const sel = document.getElementById("teamSelect");
+    const allTeams = [];
+    for (const p of state.pools) {
+      for (const t of p.Teams || []) {
+        if (t && t.TeamName) allTeams.push(t);
+      }
+    }
+    allTeams.sort((a, b) => a.TeamName.localeCompare(b.TeamName));
+
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— Choose a team —</option>' +
+      allTeams.map(t => `<option value="${t.TeamId}">${escapeHtml(t.TeamName)}</option>`).join("");
+
+    if (state.teamId) sel.value = String(state.teamId);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  // ---------- Render: status bar ----------
+  function renderStatus() {
+    const bar = document.getElementById("statusBar");
+    const text = document.getElementById("statusText");
+    const btn = document.getElementById("refreshBtn");
+    bar.classList.toggle("loading", state.loading);
+    bar.classList.toggle("stale", state.isStale && !state.loading);
+    if (state.loading) {
+      text.textContent = "Updating…";
+    } else if (state.isStale) {
+      text.textContent = `Couldn't reach AES — showing cached data from ${relativeTime(state.lastFetch)}`;
+    } else if (state.lastFetch) {
+      text.textContent = `Updated ${relativeTime(state.lastFetch)}`;
+    } else {
+      text.textContent = "Not loaded yet";
+    }
+    btn.disabled = state.loading;
+    document.getElementById("staleBanner").classList.toggle("show", state.isStale && !!state.lastFetch);
+  }
+
+  // ---------- Render: next match ----------
+  function renderNextUp() {
+    const box = document.getElementById("nextUp");
+    if (!state.teamId || !state.poolSheet) { box.classList.remove("show"); return; }
+
+    const matches = collectAllMyMatches();
+    const upcoming = matches.find(m => !m.HasScores);
+    if (!upcoming) { box.classList.remove("show"); return; }
+
+    const opp = upcoming.FirstTeamId === state.teamId ? upcoming.SecondTeamName : upcoming.FirstTeamName;
+    document.getElementById("nextWhen").textContent =
+      `${formatDay(upcoming.ScheduledStartDateTime)} ${formatTime(upcoming.ScheduledStartDateTime)}`;
+    document.getElementById("nextWho").textContent = `vs ${opp || "TBD"}`;
+    const nc = parseCourt(upcoming.Court?.Name);
+    document.getElementById("nextWhere").innerHTML =
+      `📍 <span class="court-emph">Court ${escapeHtml(nc.num)}</span>${nc.hall ? ` · ${escapeHtml(nc.hall)}` : ""}`;
+    box.classList.add("show");
+  }
+
+  function collectAllMyMatches() {
+    const out = [];
+    const sheets = [state.poolSheet, state.powerPoolSheet, state.playoffSheet].filter(Boolean);
+    for (const sheet of sheets) {
+      for (const m of sheet.Matches || []) {
+        if (m.FirstTeamId === state.teamId || m.SecondTeamId === state.teamId) {
+          out.push(m);
+        }
+      }
+    }
+    out.sort((a, b) => new Date(a.ScheduledStartDateTime) - new Date(b.ScheduledStartDateTime));
+    return out;
+  }
+
+  // ---------- Render: content ----------
+  function render() {
+    renderPicker();
+    renderStatus();
+    renderNextUp();
+
+    const content = document.getElementById("content");
+    content.innerHTML = "";
+
+    if (!state.pools.length) {
+      content.innerHTML = `<div class="empty-state"><h3>Loading tournament…</h3><p>Pulling teams from Volleyball Canada.</p></div>`;
+      return;
+    }
+    if (!state.teamId) {
+      content.innerHTML = `<div class="empty-state"><h3>Pick your team above</h3><p>All 120 U18 Boys teams are in the dropdown — type to search.</p></div>`;
+      return;
+    }
+    if (!state.teamPool) {
+      content.innerHTML = `<div class="empty-state"><h3>Team not found in current pools</h3><p>This team isn't in any active pool right now.</p></div>`;
+      return;
+    }
+
+    content.appendChild(renderDay1());
+    content.appendChild(renderDay2());
+    content.appendChild(renderDay3());
+  }
+
+  // ---------- Render: Day 1 ----------
+  function renderDay1() {
+    const wrap = document.createElement("div");
+    wrap.className = "day-section";
+    wrap.innerHTML = `<h2>Day 1 — Thursday, May 21 · Pool Play</h2>`;
+
+    if (!state.poolSheet) {
+      const ph = document.createElement("div");
+      ph.className = "empty-state";
+      ph.innerHTML = `<p>Loading pool matches…</p>`;
+      wrap.appendChild(ph);
+      return wrap;
+    }
+
+    const pool = document.createElement("div");
+    pool.className = "pool";
+    pool.innerHTML = `
+      <h3>${escapeHtml(state.teamPool.FullName)}</h3>
+      <div class="pool-meta">${escapeHtml(state.teamPool.MatchDescription || "")} · ${
+        (state.teamPool.Courts || []).map(c => shortCourt(c.Name)).join(" · ")
+      }</div>
+    `;
+    pool.appendChild(renderStandings(state.poolSheet.Pool.Teams));
+
+    const header = document.createElement("div");
+    header.className = "matches-header";
+    header.textContent = "Matches";
+    pool.appendChild(header);
+
+    const sorted = [...(state.poolSheet.Matches || [])].sort((a, b) =>
+      new Date(a.ScheduledStartDateTime) - new Date(b.ScheduledStartDateTime));
+    sorted.forEach(m => pool.appendChild(renderMatch(m)));
+
+    wrap.appendChild(pool);
+    return wrap;
+  }
+
+  function renderStandings(teams) {
+    const t = document.createElement("table");
+    t.className = "standings";
+    t.innerHTML = `<thead><tr><th>Team</th><th>W</th><th>L</th><th>Sets</th><th>Pts ratio</th></tr></thead>`;
+    const tbody = document.createElement("tbody");
+    const sorted = [...teams].filter(Boolean).sort((a, b) =>
+      b.MatchesWon - a.MatchesWon ||
+      (b.SetsWon - b.SetsLost) - (a.SetsWon - a.SetsLost)
+    );
+    sorted.forEach((team, i) => {
+      const tr = document.createElement("tr");
+      if (team.TeamId === state.teamId) tr.className = "mine";
+      const pts = isFinite(team.PointRatio) ? team.PointRatio.toFixed(2) : "—";
+      tr.innerHTML = `
+        <td><span class="rank-badge ${i < 2 ? "top" : ""}">${i + 1}</span>${escapeHtml(team.TeamName)}</td>
+        <td>${team.MatchesWon}</td>
+        <td>${team.MatchesLost}</td>
+        <td>${team.SetsWon}–${team.SetsLost}</td>
+        <td>${pts}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    t.appendChild(tbody);
+    return t;
+  }
+
+  function renderMatch(m) {
+    const div = document.createElement("div");
+    const mine = m.FirstTeamId === state.teamId || m.SecondTeamId === state.teamId;
+    const played = m.HasScores;
+    let outcome = "";
+    if (mine) {
+      if (!played) outcome = "upcoming";
+      else if ((m.FirstTeamId === state.teamId && m.FirstTeamWon) ||
+               (m.SecondTeamId === state.teamId && m.SecondTeamWon)) outcome = "won";
+      else outcome = "lost";
+    }
+    div.className = "match" + (mine ? " mine" : "") + (played ? " played" : "") + (outcome ? " " + outcome : "");
+
+    const aWin = played && m.FirstTeamWon;
+    const bWin = played && m.SecondTeamWon;
+
+    const setsWon = (m.Sets || []).reduce((acc, s) => {
+      if (s.FirstTeamScore == null || s.SecondTeamScore == null) return acc;
+      if (s.FirstTeamScore > s.SecondTeamScore) acc[0]++;
+      else if (s.SecondTeamScore > s.FirstTeamScore) acc[1]++;
+      return acc;
+    }, [0, 0]);
+
+    const setScores = (m.Sets || [])
+      .filter(s => s.FirstTeamScore != null && s.SecondTeamScore != null)
+      .map(s => `${s.FirstTeamScore}-${s.SecondTeamScore}`)
+      .join(", ");
+
+    const scoreHtml = played
+      ? `<span class="sets">${setsWon[0]}–${setsWon[1]}</span>${setScores ? `<span class="set-detail">${setScores}</span>` : ""}`
+      : `<span class="pending">scheduled</span>`;
+
+    const court = parseCourt(m.Court?.Name);
+
+    div.innerHTML = `
+      <div class="when">${formatTime(m.ScheduledStartDateTime)}</div>
+      <div class="court-badge" title="${escapeHtml(m.Court?.Name || "")}">
+        <span class="court-label">Court</span>
+        <span class="court-num">${escapeHtml(court.num)}</span>
+        ${court.hall ? `<span class="court-hall">${escapeHtml(court.hall)}</span>` : ""}
+      </div>
+      <div class="pair">
+        <span class="team ${aWin ? "win" : (played ? "loss" : "")}">${escapeHtml(m.FirstTeamName || "TBD")}</span>
+        <span class="team ${bWin ? "win" : (played ? "loss" : "")}">${escapeHtml(m.SecondTeamName || "TBD")}</span>
+      </div>
+      <div class="score">${scoreHtml}</div>
+    `;
+    return div;
+  }
+
+  // ---------- Render helpers (shared by Day 2 / Day 3) ----------
+  function renderPoolSheetCard(sheet, lockedNote) {
+    const frag = document.createDocumentFragment();
+    if (lockedNote) {
+      const note = document.createElement("p");
+      note.className = "day-note";
+      note.textContent = lockedNote;
+      frag.appendChild(note);
+    }
+    const card = document.createElement("div");
+    card.className = "pool";
+    const meta = sheet.Pool;
+    card.innerHTML = `
+      <h3>${escapeHtml(meta.CompleteFullName || meta.FullName || "")}</h3>
+      <div class="pool-meta">${(meta.Courts || []).map(c => shortCourt(c.Name)).join(" · ")}</div>
+    `;
+    const teams = (sheet.Pool.Teams || []).filter(Boolean);
+    // Standings only make sense for round-robin formats (3+ teams).
+    if (teams.length >= 3) card.appendChild(renderStandings(teams));
+    const matches = sheet.Matches || [];
+    if (matches.length) {
+      const h = document.createElement("div");
+      h.className = "matches-header";
+      h.textContent = "Matches";
+      card.appendChild(h);
+      [...matches]
+        .sort((a, b) => new Date(a.ScheduledStartDateTime) - new Date(b.ScheduledStartDateTime))
+        .forEach(m => card.appendChild(renderMatch(m)));
+    }
+    frag.appendChild(card);
+    return frag;
+  }
+
+  function renderConditionalCard(sheet, intro) {
+    const card = document.createElement("div");
+    card.className = "conditional";
+    card.innerHTML = `<p class="intro">${escapeHtml(intro)}</p>`;
+    for (const f of sheet.FutureRoundMatches || []) {
+      const match = f.Match || {};
+      const play = f.Play || {};
+      const rankMatch = (f.RankText || "").match(/^(\d+)/);
+      const rank = rankMatch ? rankMatch[1] : "?";
+      const ord = ["", "1st", "2nd", "3rd", "4th"][rank] || rank;
+      const dest = document.createElement("div");
+      dest.className = "destination";
+      dest.innerHTML = `
+        <span class="finish">${ord} place</span>
+        <span class="arrow">→</span>
+        <div class="target">
+          <span class="target-pool">${escapeHtml(play.CompleteFullName || play.FullName || "Next round")}</span>
+          <span class="target-meta">First match ${formatDay(match.ScheduledStartDateTime)} ${formatTime(match.ScheduledStartDateTime)} · ${shortCourt(match.Court?.Name)}</span>
+        </div>
+      `;
+      card.appendChild(dest);
+    }
+    return card;
+  }
+
+  // ---------- Render: Day 2 ----------
+  function renderDay2() {
+    const wrap = document.createElement("div");
+    wrap.className = "day-section";
+    wrap.innerHTML = `<h2>Day 2 — Friday, May 22 · Power Pools</h2>`;
+
+    if (state.powerPoolSheet?.Pool) {
+      wrap.appendChild(renderPoolSheetCard(state.powerPoolSheet, "Power pool seeded from Day 1 finish."));
+    } else if (state.poolSheet?.FutureRoundMatches?.length) {
+      wrap.appendChild(renderConditionalCard(state.poolSheet,
+        "Day 2 pool depends on Day 1 finish. Once Day 1 ends, this section locks to the actual pool and updates as matches are scored."));
+    } else {
+      wrap.appendChild(emptyCard("Day 2 placement will appear once Day 1 schedule is finalized."));
+    }
+    return wrap;
+  }
+
+  // ---------- Render: Day 3 ----------
+  function renderDay3() {
+    const wrap = document.createElement("div");
+    wrap.className = "day-section";
+    wrap.innerHTML = `<h2>Day 3 — Saturday, May 23 · Playoffs</h2>`;
+
+    if (state.playoffSheet?.Pool) {
+      wrap.appendChild(renderPoolSheetCard(state.playoffSheet, "Playoff bracket seeded from Day 2 finish."));
+    } else if (state.powerPoolSheet?.FutureRoundMatches?.length) {
+      wrap.appendChild(renderConditionalCard(state.powerPoolSheet,
+        "Day 3 playoff seed depends on Day 2 finish. Locks in once Day 2 power pools wrap."));
+    } else {
+      wrap.appendChild(emptyCard("Playoff bracket is published after Day 2 power pools wrap up Friday evening."));
+    }
+    return wrap;
+  }
+
+  function emptyCard(text) {
+    const e = document.createElement("div");
+    e.className = "empty-state";
+    e.innerHTML = `<p>${escapeHtml(text)}</p>`;
+    return e;
+  }
+
+  // ---------- Wiring ----------
+  document.getElementById("teamSelect").addEventListener("change", async e => {
+    const id = parseInt(e.target.value);
+    state.teamId = isNaN(id) ? null : id;
+    if (state.teamId) localStorage.setItem(TEAM_KEY, String(state.teamId));
+    else localStorage.removeItem(TEAM_KEY);
+    state.poolSheet = null;
+    state.powerPoolSheet = null;
+    state.playoffSheet = null;
+    state.teamPool = null;
+    render();
+    refresh();
+  });
+
+  document.getElementById("refreshBtn").addEventListener("click", refresh);
+
+  // ---------- Init ----------
+  loadCache();
+  const savedTeam = parseInt(localStorage.getItem(TEAM_KEY));
+  state.teamId = !isNaN(savedTeam) ? savedTeam : DEFAULT_TEAM_ID;
+  render();
+  refresh();
+  setInterval(refresh, REFRESH_MS);
+</script>
+
+</body>
+</html>
