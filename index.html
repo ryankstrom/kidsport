@@ -340,6 +340,15 @@
     font-size: 0.95rem;
     font-weight: 700;
   }
+  .match .when .bracket-label {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
 
   .court-badge {
     display: flex;
@@ -555,7 +564,8 @@
     teamPool: null,       // pool object the team is in (Day 1)
     poolSheet: null,      // poolsheet for teamPool (Day 1)
     powerPoolSheet: null, // poolsheet for the team's Day 2 power pool (if assigned)
-    playoffSheet: null,   // poolsheet for the team's Day 3 playoff bracket (if assigned)
+    playoffSheet: null,   // poolsheet if Day 3 happens to be a pool (Play.Type 0)
+    playoffBracket: null, // /play tree if Day 3 is a bracket (Play.Type 1) — Nationals uses this
     lastFetch: null,      // ISO timestamp
     isStale: false,       // last fetch failed
     loading: false,
@@ -569,6 +579,7 @@
         poolSheet: state.poolSheet,
         powerPoolSheet: state.powerPoolSheet,
         playoffSheet: state.playoffSheet,
+        playoffBracket: state.playoffBracket,
         lastFetch: state.lastFetch,
       }));
     } catch (e) { /* quota or private mode */ }
@@ -583,6 +594,7 @@
       state.poolSheet = c.poolSheet || null;
       state.powerPoolSheet = c.powerPoolSheet || null;
       state.playoffSheet = c.playoffSheet || null;
+      state.playoffBracket = c.playoffBracket || null;
       state.lastFetch = c.lastFetch || null;
     } catch (e) {}
   }
@@ -602,6 +614,15 @@
     return res.json();
   }
 
+  // Brackets (single-elim playoffs) live at a different endpoint and return a
+  // tree of Roots → TopSource/BottomSource instead of a flat pool sheet.
+  async function fetchPlay(playId) {
+    const url = `${API}/api/event/${EVENT_KEY}/play/${playId}`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("play " + res.status);
+    return res.json();
+  }
+
   // ---------- Lookups ----------
   function findTeamPool(pools, teamId) {
     for (const pool of pools) {
@@ -612,13 +633,15 @@
     return null;
   }
 
-  function findNextRoundPlayId(sheet, finishRank) {
+  function findNextRoundPlay(sheet, finishRank) {
     // FutureRoundMatches are indexed by previous-round finish (1st/2nd/3rd/4th).
-    // Works for Day 1 → Day 2, Day 2 → Day 3, and any other branching round.
+    // Play.Type tells us how to fetch: 0 = pool (/poolsheet/), 1 = bracket (/play/).
     if (!sheet || !sheet.FutureRoundMatches) return null;
     const target = sheet.FutureRoundMatches.find(f =>
       f.RankText && f.RankText.startsWith(String(finishRank) + " "));
-    return target?.Play?.PlayId || null;
+    const play = target?.Play;
+    if (!play?.PlayId) return null;
+    return { playId: play.PlayId, type: play.Type };
   }
 
   function teamFinishRank(sheet, teamId) {
@@ -661,27 +684,38 @@
           // Day 1 → Day 2: when pool play is settled, fetch the team's power pool
           const day1Rank = teamFinishRank(state.poolSheet, state.teamId);
           if (day1Rank) {
-            const ppPlayId = findNextRoundPlayId(state.poolSheet, day1Rank);
-            if (ppPlayId) {
+            const ppNext = findNextRoundPlay(state.poolSheet, day1Rank);
+            if (ppNext) {
               try {
-                state.powerPoolSheet = await fetchPoolSheet(ppPlayId);
+                state.powerPoolSheet = ppNext.type === 1
+                  ? null  // power pool isn't a bracket at this tournament, but guard anyway
+                  : await fetchPoolSheet(ppNext.playId);
 
-                // Day 2 → Day 3: when power pool is settled, fetch the team's playoff sheet
+                // Day 2 → Day 3: when power pool is settled, fetch the team's playoff bracket/pool
                 const day2Rank = teamFinishRank(state.powerPoolSheet, state.teamId);
                 if (day2Rank) {
-                  const poPlayId = findNextRoundPlayId(state.powerPoolSheet, day2Rank);
-                  if (poPlayId) {
-                    try { state.playoffSheet = await fetchPoolSheet(poPlayId); }
-                    catch (e) { /* playoff bracket not posted yet */ }
+                  const poNext = findNextRoundPlay(state.powerPoolSheet, day2Rank);
+                  if (poNext) {
+                    try {
+                      if (poNext.type === 1) {
+                        state.playoffBracket = await fetchPlay(poNext.playId);
+                        state.playoffSheet = null;
+                      } else {
+                        state.playoffSheet = await fetchPoolSheet(poNext.playId);
+                        state.playoffBracket = null;
+                      }
+                    } catch (e) { /* playoff not posted yet */ }
                   }
                 } else {
                   state.playoffSheet = null;
+                  state.playoffBracket = null;
                 }
               } catch (e) { /* power pool may not be ready */ }
             }
           } else {
             state.powerPoolSheet = null;
             state.playoffSheet = null;
+            state.playoffBracket = null;
           }
         }
       }
@@ -813,7 +847,52 @@
         }
       }
     }
+    if (state.playoffBracket) {
+      for (const m of flattenBracket(state.playoffBracket)) {
+        if (m.FirstTeamId === state.teamId || m.SecondTeamId === state.teamId) {
+          out.push(m);
+        }
+      }
+    }
     out.sort((a, b) => new Date(a.ScheduledStartDateTime) - new Date(b.ScheduledStartDateTime));
+    return out;
+  }
+
+  // Bracket matches have a different shape than poolsheet matches.
+  // Normalize so renderMatch() can render either without branching.
+  function normalizeBracketMatch(node) {
+    const m = node.Match || {};
+    const ft = m.FirstTeam, st = m.SecondTeam;
+    return {
+      MatchId: m.MatchId,
+      FirstTeamId: ft?.TeamId ?? null,
+      SecondTeamId: st?.TeamId ?? null,
+      FirstTeamName: ft?.Name || m.FirstTeamText || "TBD",
+      SecondTeamName: st?.Name || m.SecondTeamText || "TBD",
+      HasScores: m.HasScores,
+      FirstTeamWon: m.FirstTeamWon,
+      SecondTeamWon: m.SecondTeamWon,
+      Sets: m.Sets || [],
+      Court: m.Court,
+      ScheduledStartDateTime: m.ScheduledStartDateTime,
+      BracketLabel: m.ShortName, // "M1", "M5", "M7", etc. — shown under the time
+    };
+  }
+
+  function flattenBracket(play) {
+    const out = [];
+    const seen = new Set();
+    function walk(node) {
+      if (!node) return;
+      const m = node.Match;
+      if (m && m.MatchId != null && !seen.has(m.MatchId)) {
+        seen.add(m.MatchId);
+        out.push(normalizeBracketMatch(node));
+      }
+      walk(node.TopSource);
+      walk(node.BottomSource);
+    }
+    for (const r of play.Roots || []) walk(r);
     return out;
   }
 
@@ -942,7 +1021,7 @@
     const court = parseCourt(m.Court?.Name);
 
     div.innerHTML = `
-      <div class="when">${formatTime(m.ScheduledStartDateTime)}</div>
+      <div class="when">${formatTime(m.ScheduledStartDateTime)}${m.BracketLabel ? `<span class="bracket-label">${escapeHtml(m.BracketLabel)}</span>` : ""}</div>
       <div class="court-badge" title="${escapeHtml(m.Court?.Name || "")}">
         <span class="court-label">Court</span>
         <span class="court-num">${escapeHtml(court.num)}</span>
@@ -983,6 +1062,34 @@
       h.textContent = "Matches";
       card.appendChild(h);
       [...matches]
+        .sort((a, b) => new Date(a.ScheduledStartDateTime) - new Date(b.ScheduledStartDateTime))
+        .forEach(m => card.appendChild(renderMatch(m)));
+    }
+    frag.appendChild(card);
+    return frag;
+  }
+
+  function renderBracketCard(play, lockedNote) {
+    const frag = document.createDocumentFragment();
+    if (lockedNote) {
+      const note = document.createElement("p");
+      note.className = "day-note";
+      note.textContent = lockedNote;
+      frag.appendChild(note);
+    }
+    const card = document.createElement("div");
+    card.className = "pool";
+    card.innerHTML = `
+      <h3>${escapeHtml(play.CompleteFullName || play.FullName || "Playoffs")}</h3>
+      <div class="pool-meta">${(play.Courts || []).map(c => shortCourt(c.Name)).join(" · ")}</div>
+    `;
+    const matches = flattenBracket(play);
+    if (matches.length) {
+      const h = document.createElement("div");
+      h.className = "matches-header";
+      h.textContent = "Bracket";
+      card.appendChild(h);
+      matches
         .sort((a, b) => new Date(a.ScheduledStartDateTime) - new Date(b.ScheduledStartDateTime))
         .forEach(m => card.appendChild(renderMatch(m)));
     }
@@ -1038,7 +1145,9 @@
     wrap.className = "day-section";
     wrap.innerHTML = `<h2>Day 3 — Saturday, May 23 · Playoffs</h2>`;
 
-    if (state.playoffSheet?.Pool) {
+    if (state.playoffBracket?.Roots?.length) {
+      wrap.appendChild(renderBracketCard(state.playoffBracket, "Playoff bracket seeded from Day 2 finish."));
+    } else if (state.playoffSheet?.Pool) {
       wrap.appendChild(renderPoolSheetCard(state.playoffSheet, "Playoff bracket seeded from Day 2 finish."));
     } else if (state.powerPoolSheet?.FutureRoundMatches?.length) {
       wrap.appendChild(renderConditionalCard(state.powerPoolSheet,
@@ -1065,6 +1174,7 @@
     state.poolSheet = null;
     state.powerPoolSheet = null;
     state.playoffSheet = null;
+    state.playoffBracket = null;
     state.teamPool = null;
     render();
     refresh();
